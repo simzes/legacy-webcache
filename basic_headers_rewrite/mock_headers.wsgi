@@ -17,8 +17,6 @@ def application(environ, start_response):
 
     html = str(time.time()) + '\n'
 
-    html += '\n'.join(["%s: %s" % (k, v,) for k, v in environ.iteritems()])
-
     start_response(status, [
         ('Content-Type', 'text/plain'),
         ('CacheControl', 'private, must-revalidate, max-age=1'),
