@@ -1,5 +1,5 @@
 '''
-(c) 2018 simon's bench
+(c) 2018 simzes
 '''
 
 import time
