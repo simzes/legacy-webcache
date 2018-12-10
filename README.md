@@ -37,3 +37,9 @@ All other locations return the mod_wsgi script's contents without any modificati
 Similar mod_wsgi script as above, but embeds a (hopefully) cacheable resource within an html page, and contains a link to /b for a convenient way of testing browser-side caching (browsers issue no-cache messages on refresh, but not when a link is followed).
 
 Should use same apache configuration as in `basic_headers_rewrite`.
+
+### linked_content_options_wsgi
+
+Commented-out options for setting last-modified and expires according to experiments with socache for in-memory caching.
+
+`mem_cache_access.conf` contains a setup for using socache/memcache.
