@@ -7,10 +7,17 @@ import datetime
 from dateutil import tz
 
 def application(environ, start_response):
-    '''A wsgi application that returns the current unix time,
-    with headers that disable server-side and client-side caching
-    (last-modified is the current time, expires is in the past,
-    and cachecontrol and pragma disable caching)
+    '''A wsgi application that returns an html page with the current unix
+    time, with a link to a page and an embedded resource from another
+    page.
+
+    Used for testing server and client caching properties with
+    different headers.
+
+    Headers issued disable server-side and client-side caching
+    (last-modified is the current time, expires is in the past, and
+    cachecontrol and pragma disable caching)
+
     '''
 
     status = '200 OK'
