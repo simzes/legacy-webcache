@@ -221,9 +221,6 @@ from random import randint
 import logging
 import sys
 
-logging.basicConfig(filename='/usr/local/www/logs/wsgi.log', level=logging.DEBUG, format="%(levelname)s:%(asctime)-15s:%(thread)d %(message)s")
-logging.info("Starting up")
-
 # how frequently a sleeping thread checks the cache for updates
 SLEEP_POLL_INTERVAL = 0.5
 
@@ -638,7 +635,7 @@ class ConsistencyError(Exception):
     a reasonable number of tries'''
     pass
 
-def application(environ, start_response):
+def handle_application(environ, start_response):
     wsgi_request = WSGIRequest(
         request_url=environ['REQUEST_URI'],
         request_headers=get_request_headers(environ),
