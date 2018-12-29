@@ -215,6 +215,9 @@ Scenarios:
     Once the cache is updated, or an updated entry is retrieved, it is used to
     issue a fresh response.
 
+### Tests
+`./run_tests` executes a suite of tests for checking the webcache's behavior. In addition to a few basic tests that check request and response handling, a few tests use mocked-out memcache client facilities to induce contention scenarios.
+
 ## Setup and Mockout Resources
 The folders `apache_confs` and `mockout_wsgis` contain a suite of barebones mod_wsgi scripts and apache configurations for:
 
