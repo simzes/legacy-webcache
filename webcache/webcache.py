@@ -518,6 +518,7 @@ class EntryMetadata(object):
         entry.last_noted = 0
 
         entry.content_key = content_entry.content_key
+        entry._content_entry = content_entry
 
         return entry
 
@@ -538,6 +539,8 @@ class EntryMetadata(object):
             self.last_modified = EntryMetadata.time_or_last_modified_header(update_time, content_entry)
             self.sha256_digest = content_entry.digest
             self.content_key = content_entry.content_key
+
+        self._content_entry = content_entry
 
     @staticmethod
     def time_or_last_modified_header(unixtime, content_entry):
@@ -851,7 +854,7 @@ def update_cache(mc_client, wsgi_request, server_response, reservation_token):
             if check_for_cache_response(mc_client, wsgi_request, cache_metadata=cache_metadata):
                 # can already serve from cache--return response
                 # delete server body we stored unnecessarily
-                content_entry.delete()
+                content_entry.delete_content()
                 return cache_metadata
             # have entry, but need to update metadata with server response to make valid
             cache_metadata.update_for_server_response(content_entry)
