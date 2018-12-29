@@ -442,11 +442,11 @@ class EntryMetadata(object):
 
         if self._etag is not None:
             try:
-                return self._mc_client.cas(self.metadata_key, self._data, self._etag, time=300)
+                return self._mc_client.cas(self.metadata_key, self._data, self._etag)
             except pylibmc.NotFound:
                 # entry could have been evicted since creation--try insert once
                 pass
-        return self._mc_client.add(self.metadata_key, self._data, time=300)
+        return self._mc_client.add(self.metadata_key, self._data)
 
     def delete_metadata(self):
         '''Removes the metadata entry from the cache'''
