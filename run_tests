@@ -1,0 +1,2 @@
+#!/bin/bash
+PYTHONPATH=./webcache python test/test_webcache.py
