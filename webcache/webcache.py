@@ -493,7 +493,8 @@ class EntryMetadata(object):
         entry.sha256_digest = None
 
         entry.session = unixtime()
-        entry.reservation = 0
+        # reservation is one, as this thread is the first in line
+        entry.reservation = 1
         entry.last_noted = 0
 
         return entry
@@ -807,7 +808,7 @@ def update_reservation(mc_client, url):
             cache_metadata = EntryMetadata.new_reservation(mc_client, url)
 
         if cache_metadata.store_metadata():
-            won = (cache_metadata.reservation <= cache_metadata.last_noted + 1)
+            won = (cache_metadata.reservation == cache_metadata.last_noted + 1)
             return (cache_metadata, won,)
 
     raise ConsistencyError()
