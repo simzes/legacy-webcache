@@ -238,7 +238,8 @@ UPDATE_MAX_ATTEMPTS = 20
 EXPIRE_SECS = 30
 
 HTTP_HEADER_PREFIX = 'HTTP_'
-HTTP_DATE_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
+HTTP_DATE_PARSE_FORMAT = '%a, %d %b %Y %H:%M:%S %Z'
+HTTP_DATE_DISPLAY_FORMAT = '%a, %d %b %Y %H:%M:%S GMT'
 
 gmt_tz = tz.gettz('GMT')
 
@@ -261,10 +262,10 @@ DROP_NOT_OK_STATUS = True
 REQUEST_TIMEOUT = (0.5, 15)
 
 def parse_http_date(http_date_str):
-    return datetime.datetime.strptime(http_date_str, HTTP_DATE_FORMAT)
+    return datetime.datetime(*(time.strptime(http_date_str, HTTP_DATE_PARSE_FORMAT)[0:6]), tzinfo=gmt_tz)
 
 def make_http_date(datetime_obj):
-    return datetime_obj.strftime(HTTP_DATE_FORMAT)
+    return datetime_obj.strftime(HTTP_DATE_DISPLAY_FORMAT)
 
 def get_request_headers(environ):
     '''cgi/wsgi http headers are encoded like: 'HTTP_CONTENT_LENGTH: <value>'
