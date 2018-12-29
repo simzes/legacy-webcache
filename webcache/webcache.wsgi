@@ -1,5 +1,5 @@
 '''
-See webcache.py for documentation
+A wsgi wrapper around webcache.py
 
 (c) 2018 simzes
 '''
