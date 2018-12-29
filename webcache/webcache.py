@@ -492,7 +492,7 @@ class EntryMetadata(object):
         entry.url = url
         entry.sha256_digest = None
 
-        entry.session = time.time()
+        entry.session = unixtime()
         entry.reservation = 0
         entry.last_noted = 0
 
@@ -510,7 +510,7 @@ class EntryMetadata(object):
         entry.valid = True
 
         entry.url = url
-        entry.fetched = entry.session = time.time()
+        entry.fetched = entry.session = unixtime()
         entry.last_modified = EntryMetadata.time_or_last_modified_header(entry.fetched, content_entry)
         entry.sha256_digest = sha256_digest(content_entry.content)
         entry.reservation = 0
@@ -523,7 +523,7 @@ class EntryMetadata(object):
     def update_for_server_response(self, content_entry):
         '''Updates an existing cache metadata entry with updates from a new
         server request'''
-        update_time = time.time()
+        update_time = unixtime()
 
         # common fields for updating a reservation and a valid cache entry
         self.fetched = update_time
@@ -640,7 +640,7 @@ def handle_application(environ, start_response):
     wsgi_request = WSGIRequest(
         request_url=environ['REQUEST_URI'],
         request_headers=get_request_headers(environ),
-        request_time=time.time()
+        request_time=unixtime()
         )
 
     logging.info("Received request: %s", wsgi_request)
@@ -772,15 +772,15 @@ def compete_for_cache_update(wsgi_request, mc_client):
     # backoff by picking a random time between 0 and backoff *
     # SLEEP_MULTIPLY_SECONDS, up to a maximum of SLEEP_MAX_SECONDS
     backoff = (cache_metadata.reservation - cache_metadata.last_noted)
-    stop = time.time() + randint(0, min(backoff * SLEEP_MULTIPLY_INTERVAL, SLEEP_MAX_SECONDS))
+    stop = unixtime() + randint(0, min(backoff * SLEEP_MULTIPLY_INTERVAL, SLEEP_MAX_SECONDS))
 
-    logging.debug("Lost cache update, backing off until: %d, now: %d, reservation: %s", int(stop), int(time.time()), reservation_token)
+    logging.debug("Lost cache update, backing off until: %d, now: %d, reservation: %s", int(stop), int(unixtime()), reservation_token)
 
-    while stop > time.time():
+    while stop > unixtime():
         time.sleep(
             min(
                 SLEEP_POLL_INTERVAL,
-                max(stop - time.time(), 0)
+                max(stop - unixtime(), 0)
             ))
 
         cache_metadata = EntryMetadata.from_cache_or_none(mc_client, wsgi_request.url)
@@ -874,7 +874,9 @@ def _issue_server_request(wsgi_request):
     logging.debug("Issuing request to origin server: %s", wsgi_request)
 
     response = requests.get("http://127.0.0.1" + wsgi_request.url, headers=wsgi_request.headers)
-
     logging.debug("Server response--status: %d, reason: %s", response.status_code, response.reason)
 
     return response
+
+def unixtime():
+    return time.time()
